@@ -39,6 +39,13 @@ def validate_exports():
         ACCOUNT_COLUMNS
         + QUALITY_FLAGS
         + ["quality_issue_count", "quality_status"]
+        + [
+            "entity_type_description",
+            "icp_tier",
+            "icp_rationale",
+            "icp_rule_version",
+            "icp_source_year",
+        ]
     )
 
     assert list(accounts.columns) == expected_columns, (
@@ -125,6 +132,20 @@ def validate_exports():
 
     assert accounts_with_plants == (
         report["records"]["accounts_with_associated_plants"]
+    )
+
+    # Reconcile preliminary ICP counts with the report.
+    actual_tiers = {
+        str(tier): int(count)
+        for tier, count in accounts["icp_tier"].value_counts().items()
+    }
+
+    reported_tiers = report[
+        "icp_classification"
+    ]["preliminary_tier_counts"]
+
+    assert actual_tiers == reported_tiers, (
+        "ICP classification counts do not match the report."
     )
 
     print("\nEXPORT VALIDATION RESULTS")

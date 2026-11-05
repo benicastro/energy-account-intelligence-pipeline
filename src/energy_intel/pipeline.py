@@ -11,6 +11,7 @@ from energy_intel.quality import (
     flag_account_quality,
 )
 from energy_intel.schema import SOURCE_NAME, SOURCE_YEAR
+from energy_intel.classification import classify_accounts
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -45,7 +46,15 @@ def run_pipeline():
     print("Step 4: Running data-quality checks...")
     accounts = flag_account_quality(accounts)
 
-    print("Step 5: Preparing quality summary...")
+    print("Step 5: Applying preliminary ICP classification...")
+    accounts = classify_accounts(accounts)
+
+    print("Step 6: Preparing quality summary...")
+
+    icp_counts = {
+        str(tier): int(count)
+        for tier, count in accounts["icp_tier"].value_counts().items()
+    }
 
     issue_counts = {
         flag: int(accounts[flag].sum())
@@ -79,16 +88,24 @@ def run_pipeline():
             ),
             "issues_by_category": issue_counts,
         },
+        "icp_classification": {
+            "rule_version": "1.0",
+            "preliminary_tier_counts": icp_counts,
+            "warning": (
+                "Preliminary research classification only. "
+                "Not verified sales-qualified accounts."
+            ),
+        },
         "limitations": [
             "Plant associations do not establish ownership.",
             "Duplicate identifiers are flagged, not removed.",
             "No contact enrichment has been performed.",
             "No basic flags does not imply CRM verification.",
-            "ICP qualification has not yet been implemented.",
+            "ICP tiers are preliminary and require further verification.",
         ],
     }
 
-    print("Step 6: Exporting results...")
+    print("Step 7: Exporting results...")
 
     OUTPUT_CSV.parent.mkdir(
         parents=True,

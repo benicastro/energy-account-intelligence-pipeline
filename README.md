@@ -13,7 +13,8 @@ This independent portfolio project uses the **2025 U.S. Energy Information Admin
 3. **Associate:** Count distinct reported plants linked to each EIA Utility ID.
 4. **Audit:** Flag missing account IDs, names, and states, and repeated nonblank account IDs without deleting records.
 5. **Export:** Write an account review CSV and a JSON quality summary, then reconcile the two outputs.
-6. **Classify (separate exploratory step):** Apply transparent preliminary ICP rules based on EIA entity categories, associated plant counts, and basic quality status.
+6. **Classify:** Apply explainable preliminary ICP rules during the main pipeline run and include classification tiers and rationale in the exported CSV and JSON report.
+
 
 ## Results from the 2025 EIA-860 data
 
@@ -39,7 +40,8 @@ The standalone, rule-based **preliminary ICP classifier** produced the following
 | Tier 2 — Preliminary | 825 |
 | Needs Research | 11 |
 
-**Important:** ICP classification is implemented in `classification.py` but is **not yet integrated into the main CSV export**. These preliminary categories are *not* verified sales-qualified accounts. Plant associations do not prove plant ownership, and an account with no basic quality flags has not been commercially verified.
+
+**Important:** ICP classification is now integrated into the main pipeline. The 22-column account review CSV includes preliminary tiers, classification rationale, and rule-version metadata. These are not verified sales-qualified accounts. Plant associations do not establish ownership, and commercial fit requires further research.
 
 ## Technology
 
@@ -107,7 +109,11 @@ To run automated tests:
 python -m pytest -v
 ```
 
-**Test coverage:** 37 passing test cases in the current local development milestone, covering text normalization, account transformation, plant association, basic data-quality flags, and preliminary ICP classification. The repository does not yet have a GitHub Actions test workflow.
+**Test coverage:** 39 passing automated tests covering company-name normalization, utility data transformation, plant associations, data-quality checks, preliminary ICP classification, and an end-to-end integration test.
+
+The integration test uses fictional data to verify the complete pipeline, including data processing, ICP classification, CSV/JSON generation, and export reconciliation. It runs without requiring the original EIA dataset.
+
+The repository does not yet have a GitHub Actions continuous integration (CI) workflow.
 
 On macOS/Linux, activate the environment with `source .venv/bin/activate` and set the import path with `export PYTHONPATH=src`.
 
@@ -148,7 +154,7 @@ data/processed/          # Generated account CSV (Git-ignored)
 - The primary output is an **account review CSV**, not a contact-enriched or import-approved HubSpot dataset.
 - Preliminary ICP tiers are deliberately broad; specific targeting requires additional rules and evidence.
 - No API refresh/scheduling, version-pinned dependency lockfile, CI pipeline, or automated sample output publication yet.
-- Next work: incorporate the ownership dataset, strengthen qualification logic and tests, integrate classification into exports, and add a small safe-to-share sample output and CI checks.
+- Next work: incorporate the ownership dataset, strengthen qualification logic and tests, and add a small safe-to-share sample output and CI checks.
 
 ## Author
 
