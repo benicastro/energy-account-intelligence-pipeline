@@ -1,0 +1,25 @@
+sample_group,account_id,account_name,city,state,entity_type_description,associated_plant_count,icp_tier,quality_status,ownership_evidence_status,distinct_plants_with_ownership,distinct_generators_with_ownership,generator_share_exception_count
+Tier 1 - Ownership Match,10000,Evergy Metro,Kansas City,MO,Investor-Owned Utility,11,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,3,5,0
+Tier 1 - Ownership Match,10005,"Evergy Kansas South, Inc",Topeka,KS,Investor-Owned Utility,3,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,3,7,0
+Tier 1 - Ownership Match,10035,Kansas Municipal Energy Agency - (KS),Overland Park,KS,Municipally-Owned Utility,1,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,2,5,0
+Tier 1 - Ownership Match,1015,Austin Energy,Austin,TX,Municipally-Owned Utility,8,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,2,4,0
+Tier 1 - Ownership Match,10171,Kentucky Utilities Co,Lexington,KY,Investor-Owned Utility,8,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,6,17,0
+Tier 1 - Ownership Match,10210,Ketchikan Public Utilities,Ketchikan,AK,Municipally-Owned Utility,5,Tier 1 - Preliminary,no_basic_flags,source_reported_owner_match,1,1,0
+Tier 1 - No Ownership Match,10004,King County Dept-Natural Res - (WA),Seattle,WA,Municipally-Owned Utility,1,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 1 - No Ownership Match,10046,Kas Brothers Windfarm LLC,Woodstock,MN,Independent Power Producer,1,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 1 - No Ownership Match,1005,Avalon Hydropower LLC,Stoneville,NC,Independent Power Producer,1,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 1 - No Ownership Match,10056,City of Kaukauna (WI),Kaukauna,WI,Municipally-Owned Utility,8,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 1 - No Ownership Match,10071,Kauai Island Utility Cooperative,Lihue,HI,Cooperative,4,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 1 - No Ownership Match,10152,City of Kennett - (MO),Kennett,MO,Municipally-Owned Utility,2,Tier 1 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,10077,Kaweah Delta Hospital,Visalia,CA,Commercial,1,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,10203,Kern River Cogeneration Co,Bakersfield,CA,Industrial,1,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,10273,Kimberly-Clark Corp,Dallas,TX,Industrial,2,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,1058,B Braun Medical Inc,Bethlehem,PA,Industrial,1,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,11161,Loma Linda University,Loma Linda,CA,Commercial,1,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Tier 2 - Preliminary,11169,Longview Fibre Co,Longview,WA,Industrial,1,Tier 2 - Preliminary,no_basic_flags,no_matched_record_in_ownership_table,,,
+Needs Research,60753,"Punta Lima Wind Farm, LLC",New York,NY,Independent Power Producer,0,Needs Research,no_basic_flags,no_matched_record_in_ownership_table,,,
+Needs Research,61073,"Minnesota Solar CSG 9, LLC",Toronto,,Independent Power Producer,1,Needs Research,review_required,no_matched_record_in_ownership_table,,,
+Needs Research,61074,"Minnesota Solar CSG 21, LLC",Toronto,,Independent Power Producer,1,Needs Research,review_required,no_matched_record_in_ownership_table,,,
+Needs Research,61075,"Minnesota Solar CSG 19, LLC",Toronto,,Independent Power Producer,1,Needs Research,review_required,no_matched_record_in_ownership_table,,,
+Needs Research,61076,"Minnesota Solar CSG 4, LLC",Toronto,,Independent Power Producer,1,Needs Research,review_required,no_matched_record_in_ownership_table,,,
+Needs Research,61101,"Minnesota Solar CSG 1, LLC",Toronto,,Independent Power Producer,1,Needs Research,review_required,no_matched_record_in_ownership_table,,,

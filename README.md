@@ -59,6 +59,39 @@ Ownership analysis is **a separate, linked evidence workflow**. It does not auto
 
 **Interpretation:** An owner match means there is a corresponding source-reported ownership identifier in the EIA table. An account without a match is marked `no_matched_record_in_ownership_table`; **it is not classified as owning zero plants**. Several owners may have interests in the same generator, and repeated generator IDs at different plants are treated as distinct units.
 
+## Explore the public sample
+
+A curated 24-record sample is available in the
+[`samples/`](samples/) directory.
+
+The sample demonstrates:
+
+- Standardized energy-sector company records
+- Preliminary ICP segmentation and classification
+- Plant association counts
+- Generator ownership evidence
+- Distinctions between matched and unmatched ownership records
+- Identification of records requiring further research
+
+The sample contains six records from each of four
+categories:
+
+| Category | Records |
+|---|---:|
+| Tier 1 with ownership matches | 6 |
+| Tier 1 without ownership matches | 6 |
+| Tier 2 preliminary accounts | 6 |
+| Needs Research | 6 |
+| **Total** | **24** |
+
+**Note:** This is an intentionally selected demonstration
+sample, not a statistically representative sample.
+Preliminary ICP classifications do not imply verified
+sales qualification.
+
+See the [sample methodology](samples/README.md)
+for selection rules, field definitions, and limitations.
+
 ## Technology
 
 - Python 3.12
@@ -157,7 +190,7 @@ reports/eia860_2025_ownership_linkage_summary.json
 python -m pytest -q
 ```
 
-**Test coverage:** **66 passing automated tests** in the latest local development milestone, including source transformation, plant-association counting, data-quality flags, preliminary ICP classification, generator ownership aggregation, ownership exports, identifier-based linkage, and end-to-end integration testing with fictional data. The integration tests do not require the downloaded EIA ZIP. A GitHub Actions continuous-integration workflow has not yet been configured.
+**Test coverage:** **72 passing automated tests** in the latest local development milestone, including source transformation, plant-association counting, data-quality flags, preliminary ICP classification, generator ownership aggregation, ownership exports, identifier-based linkage, and end-to-end integration testing with fictional data. The integration tests do not require the downloaded EIA ZIP. A GitHub Actions continuous-integration workflow has not yet been configured.
 
 For macOS/Linux, activate the virtual environment with `source .venv/bin/activate` and set the Python import path with `export PYTHONPATH=src`.
 
