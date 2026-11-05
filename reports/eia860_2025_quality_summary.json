@@ -1,0 +1,30 @@
+{
+  "source": {
+    "name": "EIA-860",
+    "year": 2025,
+    "source_type": "Public EIA-860 annual dataset"
+  },
+  "records": {
+    "utility_source_rows": 6946,
+    "plant_source_rows": 17349,
+    "account_output_rows": 6946,
+    "accounts_with_associated_plants": 6944
+  },
+  "data_quality": {
+    "records_requiring_review": 9,
+    "records_without_basic_flags": 6937,
+    "issues_by_category": {
+      "missing_account_id": 0,
+      "missing_account_name": 0,
+      "missing_state": 9,
+      "duplicate_account_id": 0
+    }
+  },
+  "limitations": [
+    "Plant associations do not establish ownership.",
+    "Duplicate identifiers are flagged, not removed.",
+    "No contact enrichment has been performed.",
+    "No basic flags does not imply CRM verification.",
+    "ICP qualification has not yet been implemented."
+  ]
+}
