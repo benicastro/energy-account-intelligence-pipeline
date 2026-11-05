@@ -1,0 +1,15 @@
+{
+  "source_accounts": 6946,
+  "source_owner_entities": 2047,
+  "linked_account_rows": 6946,
+  "accounts_with_owner_matches": 313,
+  "accounts_without_owner_matches": 6633,
+  "unmatched_owner_entities": 1734,
+  "matching_method": "Exact EIA account_id to Ownership ID",
+  "limitations": [
+    "No matching ownership record does not imply no ownership.",
+    "Generator-level ownership evidence is not proof of current operational status.",
+    "ICP tiers have not been changed.",
+    "Unmatched owners are preserved separately for research."
+  ]
+}

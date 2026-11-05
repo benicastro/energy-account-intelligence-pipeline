@@ -1,0 +1,34 @@
+{
+  "source": {
+    "name": "EIA-860",
+    "year": 2025,
+    "table": "Ownership"
+  },
+  "records": {
+    "ownership_source_rows": 5680,
+    "distinct_owner_entities": 2047,
+    "matched_owner_accounts": 313,
+    "unmatched_owner_entities": 1734
+  },
+  "evidence_quality": {
+    "owners_with_share_exceptions": 4,
+    "owners_with_missing_shares": 1,
+    "owners_with_invalid_shares": 0,
+    "owners_with_name_variants": 0
+  },
+  "methodology": {
+    "owner_key": "Ownership ID",
+    "master_match_key": "Utility ID",
+    "plant_count": "Distinct Plant Codes per owner",
+    "generator_count": "Distinct Plant Code + Generator ID combinations per owner"
+  },
+  "limitations": [
+    "Ownership evidence is generator-level.",
+    "A reporting utility is not necessarily the owner.",
+    "No ownership record does not imply no ownership.",
+    "Unmatched owners require entity verification.",
+    "Generator status has not yet been used to filter active assets.",
+    "Ownership shares are not aggregated into company-level ownership percentages.",
+    "No sales qualification is implied."
+  ]
+}

@@ -1,77 +1,100 @@
 # Energy Account Intelligence Pipeline
 
-**A reproducible Python project for public energy-sector data processing, account-level analysis, data-quality review, and preliminary ICP segmentation.**
+**A reproducible Python portfolio project for public energy-sector data processing, account intelligence, data-quality auditing, preliminary ICP segmentation, and generator-ownership relationship analysis.**
 
-This independent portfolio project uses the **2025 U.S. Energy Information Administration (EIA) Form EIA-860** dataset to demonstrate how raw public-sector records can be turned into consistent, auditable account data. It combines Python ingestion, pandas transformations, distinct plant associations, quality checks, and documented targeting rules.
+This independent project processes the **2025 U.S. Energy Information Administration (EIA) Form EIA-860** data. It demonstrates how to turn raw public records into structured, auditable account datasets, link related records using source identifiers, identify data-quality exceptions, and preserve evidence for further research.
 
-> **Scope:** This is a technical demonstration—not a verified lead list or a production-ready CRM import. The source is public government data; no private client records are included.
+> **Scope:** This is a technical and analytical portfolio project, **not** a verified prospect list or a production-ready CRM import. The project uses public EIA data and fictional test fixtures; it does not contain confidential client data.
 
 ## What the project does
 
-1. **Ingest:** Read selected Excel workbooks directly from the original EIA-860 ZIP archive.
-2. **Standardize:** Map EIA utility fields to a consistent account schema, normalize company-name whitespace, and retain source metadata.
-3. **Associate:** Count distinct reported plants linked to each EIA Utility ID.
-4. **Audit:** Flag missing account IDs, names, and states, and repeated nonblank account IDs without deleting records.
-5. **Export:** Write an account review CSV and a JSON quality summary, then reconcile the two outputs.
-6. **Classify:** Apply explainable preliminary ICP rules during the main pipeline run and include classification tiers and rationale in the exported CSV and JSON report.
+1. **Ingest:** Read EIA utility, plant, and generator-ownership Excel workbooks directly from the annual ZIP archive.
+2. **Standardize:** Map source fields to a documented account schema, normalize company-name whitespace, and retain source metadata.
+3. **Associate:** Count distinct plants reported against each EIA Utility ID without inflating counts from repeated records.
+4. **Audit:** Flag missing identifiers, names, and states, as well as duplicate nonblank account IDs; preserve records for review.
+5. **Classify:** Apply transparent, project-defined preliminary ideal customer profile (ICP) rules and export a rationale for each account.
+6. **Analyze ownership:** Attribute generator-level ownership records to their **Ownership ID**, not automatically to the reporting utility; calculate distinct plant/generator counts and flag anomalous ownership shares.
+7. **Resolve relationships:** Match owner IDs to account IDs, retain all original accounts, and export unmatched owner entities separately for additional research.
+8. **Validate and export:** Write CSV evidence datasets and JSON audit summaries, run reconciliation checks, and test the components and workflows with pytest.
 
+## Results using 2025 EIA-860 data
 
-## Results from the 2025 EIA-860 data
-
-The following figures are from the project's generated quality report, not estimates:
+### Account intelligence
 
 | Measure | Result |
 |---|---:|
-| Utility source records | 6,946 |
-| Plant source records | 17,349 |
+| Utility source rows | 6,946 |
+| Plant source rows | 17,349 |
 | Standardized account records | 6,946 |
-| Accounts with at least one associated plant | 6,944 |
-| Account records requiring basic quality review | 9 |
+| Accounts with at least one reported plant association | 6,944 |
+| Records requiring basic quality review | 9 |
 | Missing state flags | 9 |
-| Missing account ID flags | 0 |
-| Missing account name flags | 0 |
+| Missing account ID / name flags | 0 / 0 |
 | Duplicate account ID flags | 0 |
 
-The standalone, rule-based **preliminary ICP classifier** produced the following exploratory segmentation:
+**Preliminary ICP distribution** (project-defined screening, not sales qualification):
 
-| Classification | Accounts |
+| Category | Accounts |
 |---|---:|
 | Tier 1 — Preliminary | 6,110 |
 | Tier 2 — Preliminary | 825 |
 | Needs Research | 11 |
 
+The main account pipeline produces a **22-column review CSV**, including entity-type descriptions, preliminary ICP tiers, rationale, and rule-version metadata. A high preliminary tier is **not** evidence of verified ownership, geography fit, purchase intent, or an approved outreach contact.
 
-**Important:** ICP classification is now integrated into the main pipeline. The 22-column account review CSV includes preliminary tiers, classification rationale, and rule-version metadata. These are not verified sales-qualified accounts. Plant associations do not establish ownership, and commercial fit requires further research.
+### Generator ownership intelligence
+
+| Measure | Result |
+|---|---:|
+| Source-reported ownership rows | 5,680 |
+| Distinct owner IDs | 2,047 |
+| Owners matched to the utility account master | 313 |
+| Owners not matched to the utility account master | 1,734 |
+| Accounts with no matching owner record in this table | 6,633 |
+| Owners with generator-share exceptions | 4 |
+| Owners with missing ownership shares | 1 |
+| Owners with out-of-range ownership shares | 0 |
+
+Ownership analysis is **a separate, linked evidence workflow**. It does not automatically alter the ICP tiers assigned by the account pipeline.
+
+**Interpretation:** An owner match means there is a corresponding source-reported ownership identifier in the EIA table. An account without a match is marked `no_matched_record_in_ownership_table`; **it is not classified as owning zero plants**. Several owners may have interests in the same generator, and repeated generator IDs at different plants are treated as distinct units.
 
 ## Technology
 
-- Python 3.12 (developed and tested locally)
-- pandas and openpyxl for tabular ingestion and transformation
-- `zipfile` for direct ZIP archive access
-- pytest for automated testing
-- CSV and JSON outputs for downstream review and auditability
+- Python 3.12
+- pandas and openpyxl for ingestion, transformations, and tabular audits
+- Python `zipfile`, `pathlib`, and `json` for archive processing and reporting
+- pytest for unit and integration tests
+- CSV and JSON for reviewable downstream data and audit reports
 
-## Source data
+## Data source and preparation
 
-Download the **2025 EIA-860** annual data ZIP from the official [EIA Form EIA-860 data page](https://www.eia.gov/electricity/data/eia860/).
+Download the **2025 EIA-860 annual ZIP** from the official [U.S. EIA Form EIA-860 data page](https://www.eia.gov/electricity/data/eia860/).
 
-Save the downloaded archive as:
+Save it at:
 
 ```text
 data/raw/eia8602025.zip
 ```
 
-The loader currently expects these files inside that archive:
+The loader uses these workbooks and sheets from the archive:
 
-- `1___Utility_Y2025.xlsx` — `Utility` worksheet
-- `2___Plant_Y2025.xlsx` — `Plant` worksheet
-- `4___Owner_Y2025.xlsx` — `Ownership` worksheet (loader supported; ownership analysis is not yet integrated)
+| File in ZIP | Worksheet | Use |
+|---|---|---|
+| `1___Utility_Y2025.xlsx` | `Utility` | Account master |
+| `2___Plant_Y2025.xlsx` | `Plant` | Plant associations |
+| `4___Owner_Y2025.xlsx` | `Ownership` | Generator ownership evidence |
+| `LayoutY2025.xlsx` | Data dictionary worksheets | Interpret fields and entity codes |
 
-The EIA workbooks have column headings on **Excel row 2**; the loader uses `header=1` in pandas. The large downloaded ZIP and generated full account CSV are intentionally excluded from Git to keep the repository focused on reproducible code and safe-to-share reports.
+Workbook column names begin on **Excel row 2**, so the loader uses `header=1`. EIA `Entity Type` definitions are taken from the data dictionary in the source archive.
+
+The source ZIP and generated full-size CSV datasets are intentionally excluded from Git through `.gitignore`. The code, tests, and aggregate JSON reports can be version-controlled without committing the large raw dataset.
 
 ## Run locally
 
-Clone the repository and open a terminal in the project root:
+The following examples use **Windows PowerShell** from the repository root.
+
+### 1. Set up the project
 
 ```powershell
 git clone https://github.com/benicastro/energy-account-intelligence-pipeline.git
@@ -79,88 +102,119 @@ cd energy-account-intelligence-pipeline
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
+$env:PYTHONPATH = "src"
 ```
 
-Place `eia8602025.zip` in `data/raw/` as described above, then execute:
+Download the EIA-860 archive and save it at `data/raw/eia8602025.zip` before running the data workflows.
+
+### 2. Generate and validate account intelligence
 
 ```powershell
-$env:PYTHONPATH = "src"
 python -m energy_intel.pipeline
 python -m energy_intel.validate_exports
 ```
 
-The main pipeline produces:
+Outputs:
 
 ```text
 data/processed/eia860_2025_accounts_review.csv
 reports/eia860_2025_quality_summary.json
 ```
 
-To explore preliminary ICP segmentation from the generated account review CSV:
+### 3. Generate generator ownership evidence
 
 ```powershell
-$env:PYTHONPATH = "src"
-python -m energy_intel.classification
+python -m energy_intel.export_ownership
 ```
 
-To run automated tests:
+Outputs:
+
+```text
+data/processed/eia860_2025_ownership_evidence.csv
+reports/eia860_2025_ownership_summary.json
+```
+
+### 4. Link ownership evidence to accounts and reconcile
+
+Run this **after** both the account and ownership exports have been generated:
 
 ```powershell
-python -m pytest -v
+python -m energy_intel.ownership_linkage
+python -m energy_intel.validate_ownership_linkage
 ```
 
-**Test coverage:** 39 passing automated tests covering company-name normalization, utility data transformation, plant associations, data-quality checks, preliminary ICP classification, and an end-to-end integration test.
+Outputs:
 
-The integration test uses fictional data to verify the complete pipeline, including data processing, ICP classification, CSV/JSON generation, and export reconciliation. It runs without requiring the original EIA dataset.
+```text
+data/processed/eia860_2025_accounts_with_ownership.csv
+data/processed/eia860_2025_unmatched_owners.csv
+reports/eia860_2025_ownership_linkage_summary.json
+```
 
-The repository does not yet have a GitHub Actions continuous integration (CI) workflow.
+### 5. Run tests
 
-On macOS/Linux, activate the environment with `source .venv/bin/activate` and set the import path with `export PYTHONPATH=src`.
+```powershell
+python -m pytest -q
+```
+
+**Test coverage:** **66 passing automated tests** in the latest local development milestone, including source transformation, plant-association counting, data-quality flags, preliminary ICP classification, generator ownership aggregation, ownership exports, identifier-based linkage, and end-to-end integration testing with fictional data. The integration tests do not require the downloaded EIA ZIP. A GitHub Actions continuous-integration workflow has not yet been configured.
+
+For macOS/Linux, activate the virtual environment with `source .venv/bin/activate` and set the Python import path with `export PYTHONPATH=src`.
 
 ## Repository layout
 
 ```text
 src/energy_intel/
-  loader.py             # Read EIA workbooks from the ZIP archive
-  normalization.py      # Clean company-name whitespace
-  schema.py             # Account schema and source field mappings
-  transform.py          # Build standardized utility records
-  association.py        # Count distinct plant associations
-  quality.py            # Flag basic record-quality issues
-  pipeline.py           # Main export pipeline and summary report
-  validate_exports.py   # Reconcile exported CSV with JSON metrics
-  classification.py     # Standalone exploratory ICP tiers
-  profile_accounts.py   # Inspect source entity and plant distributions
-  inspect_eia.py        # Source workbook inspection
+  __init__.py
+  schema.py                     # Source field mappings and account schema
+  loader.py                     # EIA workbooks read from ZIP archive
+  normalization.py              # Company-name normalization
+  transform.py                  # Standardized utility account records
+  association.py                # Distinct reported plant associations
+  quality.py                    # Basic data-quality flags
+  classification.py             # Project-defined preliminary ICP tiers
+  pipeline.py                   # Account CSV and JSON report generation
+  validate_exports.py           # Account export reconciliation
+  inspect_eia.py                # Source data exploration
+  profile_accounts.py           # Account/entity distribution profiling
+  inspect_ownership.py          # Ownership source exploration
+  audit_ownership.py            # Ownership identifier/share checks
+  ownership_evidence.py         # Generator ownership -> owner-level evidence
+  export_ownership.py           # Ownership evidence CSV and JSON export
+  ownership_linkage.py          # Match owner IDs to account IDs
+  validate_ownership_linkage.py # Cross-export linkage reconciliation
 
-tests/                   # pytest unit tests
-reports/                 # Aggregate quality report
-data/raw/                # Local source ZIP (Git-ignored)
-data/processed/          # Generated account CSV (Git-ignored)
+tests/                           # pytest unit and integration tests
+reports/                         # Aggregate, shareable JSON reports
+data/raw/                        # Local EIA ZIP (Git-ignored)
+data/processed/                  # Generated CSV files (Git-ignored)
 ```
 
 ## Methodology and safeguards
 
-- EIA **Utility ID** is retained as a string; identifiers should not be converted to numbers because their exact representation matters.
-- The associated plant count uses **distinct Plant Codes per Utility ID**; duplicate records do not inflate the count.
-- Quality flags identify records needing review. They do **not** automatically delete or merge accounts.
-- Missing values are not silently replaced with unsupported assumptions.
-- EIA `Entity Type` codes are interpreted using the definitions included in the archive's `LayoutY2025.xlsx` data dictionary.
-- Preliminary ICP rules are **project-defined research criteria**, not EIA classifications. Geographic fit, asset ownership, active operating status, decision-maker relevance, and outreach suitability require further verification.
+- **Identifiers over name guesses:** EIA account IDs and owner IDs are retained as strings. Ownership attribution uses `Ownership ID`; the `Utility ID` on an ownership row represents the reporting utility and is not automatically assumed to be the owner.
+- **No inflated asset counts:** Distinct plants are counted by Plant Code, and distinct generators by the Plant Code + Generator ID combination.
+- **Share anomalies are visible:** Missing, invalid, or inconsistent generator-level ownership-share totals are flagged rather than silently repaired. Percentages are *not* summed into a misleading company-wide ownership percentage.
+- **Unmatched entities survive:** Owners absent from the utility master remain in a separate export for future research, rather than being dropped or matched by unverified company-name similarity.
+- **Absence is not zero:** No owner-record match does not establish that an account owns no generation assets. Missing evidence is preserved as missing.
+- **Explainable preliminary ICP rules:** Tier assignments are documented and reproduceable, but are not official EIA categories or verified sales qualifications. Ownership evidence does not currently change preliminary ICP tiers.
+- **Reproducibility:** CSV/JSON outputs have reconciliation checks, and automated tests use fictional fixtures to cover edge cases without relying on private data or external services.
 
-## Known limitations and next improvements
+## Known limitations and roadmap
 
-- Generator-level ownership analysis is not yet implemented; a reported plant association is not proof of ownership.
-- The primary output is an **account review CSV**, not a contact-enriched or import-approved HubSpot dataset.
-- Preliminary ICP tiers are deliberately broad; specific targeting requires additional rules and evidence.
-- No API refresh/scheduling, version-pinned dependency lockfile, CI pipeline, or automated sample output publication yet.
-- Next work: incorporate the ownership dataset, strengthen qualification logic and tests, and add a small safe-to-share sample output and CI checks.
+- The published ownership information is **source-reported generator-level evidence**, not independently verified beneficial ownership or a comprehensive record of all assets a company owns.
+- Generator operational status is not yet incorporated into qualification; a reported ownership interest is not proof that an asset is currently operating.
+- The ICP categories are deliberately broad and do not yet establish geography fit, business relevance, procurement authority, contact validity, or outreach suitability.
+- The 1,734 unmatched owners require additional identity and company research before they can become usable accounts in a CRM workflow.
+- The main account export and ownership exports are separate, with an explicit linkage step. Ownership results do not automatically re-score ICP tiers.
+- Version-pinned dependencies, automated CI, source refresh/scheduling, and a compact published sample dataset are planned improvements.
+- Next steps include a small reproducible public sample, stronger ownership/status validation, more targeted ICP filters, and CI checks.
 
 ## Author
 
 **Benedict Z. Castro** — Python automation, B2B account intelligence, data quality, and software engineering.
 
 - [Professional portfolio](https://benicastro.github.io/benedict-portfolio/)
-- [GitHub](https://github.com/benicastro)
+- [GitHub profile](https://github.com/benicastro)
 
-*Independent project using public data. No client information or confidential source code is used.*
+*Independent project using public data. No confidential client records or proprietary source code are included.*
