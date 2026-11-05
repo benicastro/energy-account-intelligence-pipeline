@@ -1,5 +1,9 @@
 # Energy Account Intelligence Pipeline
 
+
+[![Python Tests](https://github.com/benicastro/energy-account-intelligence-pipeline/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/benicastro/energy-account-intelligence-pipeline/actions/workflows/tests.yml)
+
+
 **A reproducible Python portfolio project for public energy-sector data processing, account intelligence, data-quality auditing, preliminary ICP segmentation, and generator-ownership relationship analysis.**
 
 This independent project processes the **2025 U.S. Energy Information Administration (EIA) Form EIA-860** data. It demonstrates how to turn raw public records into structured, auditable account datasets, link related records using source identifiers, identify data-quality exceptions, and preserve evidence for further research.
