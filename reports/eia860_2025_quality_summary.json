@@ -20,11 +20,20 @@
       "duplicate_account_id": 0
     }
   },
+  "icp_classification": {
+    "rule_version": "1.0",
+    "preliminary_tier_counts": {
+      "Tier 1 - Preliminary": 6110,
+      "Tier 2 - Preliminary": 825,
+      "Needs Research": 11
+    },
+    "warning": "Preliminary research classification only. Not verified sales-qualified accounts."
+  },
   "limitations": [
     "Plant associations do not establish ownership.",
     "Duplicate identifiers are flagged, not removed.",
     "No contact enrichment has been performed.",
     "No basic flags does not imply CRM verification.",
-    "ICP qualification has not yet been implemented."
+    "ICP tiers are preliminary and require further verification."
   ]
 }
